@@ -1,7 +1,15 @@
 mod atomics;
 
+use std::thread;
+
 fn main() {
-    let data = atomics::get_data();
-    let key = atomics::get_key();
-    println!("{key}\n{data}");
+
+    thread::scope(|s| {
+        for _ in 0..4 {
+            s.spawn(|| {
+                let res = atomics::get_data();
+                println!("{res}");
+            });
+        }
+    })
 }

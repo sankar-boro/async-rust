@@ -24,8 +24,10 @@ pub fn get_data() -> &'static String {
     let mut p = PTR.load(Acquire);
 
     if p.is_null() {
+        println!("setting AtomicPtr");
         p = Box::into_raw(Box::new(String::from("Sankar boro")));
         if let Err(e) = PTR.compare_exchange(std::ptr::null_mut(), p, Release, Acquire) {
+            println!("erro");
             drop(unsafe { Box::from_raw(p) });
             p = e;
         }
